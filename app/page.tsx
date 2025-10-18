@@ -1,5 +1,4 @@
 
-import { ChatbotSection } from '../components/chatbot-section'
 import { WeCanHelpSection } from '../components/we-can-help-section'
 import { ContentMachineSection } from '../components/content-machine-section'
 import { PortfolioSection } from '../components/portfolio-section'
@@ -13,8 +12,7 @@ export default function Home() {
       <Header />
       <main className="min-h-screen">
         {/* Focus on Mayor's Election chatbot first */}
-        <ChatbotSection />
-        
+              
         {/* Then transition to Steve's work/promotions */}
         <WeCanHelpSection />
         <ContentMachineSection />
