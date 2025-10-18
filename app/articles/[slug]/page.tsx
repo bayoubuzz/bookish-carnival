@@ -123,7 +123,7 @@ export default async function ArticlePage({ params }: { params: { slug: string }
       <article className="py-20">
         <div className="max-w-4xl mx-auto px-6">
           <div className="prose prose-lg prose-blue max-w-none">
-            {article.content.split('\n').map((paragraph: string, index) => (
+           {article.content.split('\n').map((paragraph: string, index: number) => (
               paragraph.trim() ? (
                 <p key={index} className="mb-6 text-gray-700 leading-relaxed">
                   {paragraph}
