@@ -1,0 +1,120 @@
+
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+    provider = "prisma-client-js"
+    binaryTargets = ["native", "linux-musl-arm64-openssl-3.0.x"]
+    output = "/home/ubuntu/steve_sabludowsky_site/app/node_modules/.prisma/client"
+}
+
+datasource db {
+    provider = "postgresql"
+    url      = env("DATABASE_URL")
+}
+
+model Account {
+  id                String  @id @default(cuid())
+  userId            String
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String? @db.Text
+  access_token      String? @db.Text
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String? @db.Text
+  session_state     String?
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+}
+
+model Session {
+  id           String   @id @default(cuid())
+  sessionToken String   @unique
+  userId       String
+  expires      DateTime
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model User {
+  id            String    @id @default(cuid())
+  name          String?
+  email         String    @unique
+  password      String?
+  emailVerified DateTime?
+  image         String?
+  isAdmin       Boolean   @default(false)
+  accounts      Account[]
+  sessions      Session[]
+  articles      Article[]
+  projects      Project[]
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+}
+
+model VerificationToken {
+  identifier String
+  token      String   @unique
+  expires    DateTime
+
+  @@unique([identifier, token])
+}
+
+model Article {
+  id           String   @id @default(cuid())
+  title        String
+  content      String   @db.Text
+  excerpt      String?
+  category     String
+  imageUrl     String?
+  videoUrl     String?
+  thumbnailUrl String?  // URL to thumbnail image
+  youtubeUrl   String?  // YouTube video URL
+  published    Boolean  @default(false)
+  slug         String   @unique
+  authorId     String
+  author       User     @relation(fields: [authorId], references: [id], onDelete: Cascade)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  @@index([published])
+  @@index([category])
+}
+
+model Project {
+  id          String   @id @default(cuid())
+  title       String
+  description String   @db.Text
+  category    String
+  type        String   // "YouTube", "Article", "LinkedIn", etc.
+  duration    String   // "15 min", "Demo", etc.
+  thumbnail   String?  // URL to thumbnail image
+  link        String   // Primary link (YouTube, article, etc.)
+  toolLink    String?  // Optional secondary link for tools
+  featured    Boolean  @default(false)
+  published   Boolean  @default(false)
+  authorId    String
+  author      User     @relation(fields: [authorId], references: [id], onDelete: Cascade)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@index([published])
+  @@index([category])
+  @@index([featured])
+}
+
+model SiteSettings {
+  id                String   @id @default(cuid())
+  chatbotUrl        String   @default("https://apps.abacus.ai/chatllm/?appId=7942a1764&hideTopBar=2")
+  chatbotTitle      String   @default("New Orleans Mayor's Election")
+  chatbotSubtitle   String   @default("Your AI-powered Q&A assistant for election information")
+  siteTitle         String   @default("Steve Sabludowsky - AI & Video Consultant")
+  siteDescription   String   @db.Text
+  contactEmail      String   @default("admin@steveaiandvideo.com")
+  updatedAt         DateTime @updatedAt
+  createdAt         DateTime @default(now())
+}
