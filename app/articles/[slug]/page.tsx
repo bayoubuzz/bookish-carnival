@@ -168,7 +168,7 @@ export async function generateStaticParams() {
       },
     })
 
-    return articles.map((article) => ({
+   return articles.map((article: { slug: string }) => ({
       slug: article.slug,
     }))
   } catch (error) {
