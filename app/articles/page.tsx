@@ -60,7 +60,7 @@ export default async function ArticlesPage() {
             </div>
           ) : (
             <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-              {articles.map((article) => (
+              {articles.map((article: { id: string; slug: string; youtubeUrl?: string | null; videoUrl?: string | null; thumbnailUrl?: string | null; imageUrl?: string | null; title: string; excerpt?: string | null; category: string; author: { name?: string | null }; createdAt: string | Date }) => (
                 <Link key={article.id} href={`/articles/${article.slug}`}>
                   <Card className="group hover:shadow-xl transition-all duration-300 hover:-translate-y-2">
                     {article.youtubeUrl || article.videoUrl ? (
